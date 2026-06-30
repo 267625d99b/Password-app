@@ -58,7 +58,13 @@ module.exports = (req, res) => {
   }
 
   try {
+    // Debug: log request body
+    console.log('Request body:', req.body);
+    console.log('Body type:', typeof req.body);
+    
     const { masterPassword } = req.body;
+
+    console.log('Master Password received:', !!masterPassword, 'Length:', masterPassword?.length);
 
     if (!masterPassword || masterPassword.length < 4) {
       return res.status(400).json({ error: 'كلمة المرور يجب أن تكون 4 أحرف على الأقل' });

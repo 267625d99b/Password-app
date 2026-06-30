@@ -1,35 +1,4 @@
 {
   "version": 2,
-  "regions": ["cdg1"],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1.js",
-      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH"]
-    },
-    {
-      "src": "/(.*\\.js)",
-      "dest": "/public/$1"
-    },
-    {
-      "src": "/(.*\\.css)",
-      "dest": "/public/$1"
-    },
-    {
-      "src": "/(.*\\.json)",
-      "dest": "/public/$1"
-    },
-    {
-      "src": "/(.*\\.svg)",
-      "dest": "/public/$1"
-    },
-    {
-      "src": "/(.*\\.png)",
-      "dest": "/public/$1"
-    },
-    {
-      "src": "/.*",
-      "dest": "/public/index.html"
-    }
-  ]
+  "regions": ["cdg1"]
 }
