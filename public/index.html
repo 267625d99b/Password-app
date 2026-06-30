@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مدير كلمات المرور</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b57d0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="مدير كلمات المرور">
+  <link rel="apple-touch-icon" href="icons/ChatGPT Image 23 يونيو 2026، 03_58_53 ص (1).png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Master Password Screen -->
+  <div id="masterScreen" class="master-screen">
+    <div class="master-card">
+      <div class="master-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0b57d0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0110 0v4"></path>
+        </svg>
+      </div>
+      <h1 id="masterTitle">فتح الخزنة</h1>
+      <p id="masterSubtitle" class="master-subtitle">أدخل كلمة المرور الرئيسية</p>
+      <div class="master-input-group">
+        <div class="password-input-wrapper">
+          <input type="password" id="masterPasswordInput" class="master-input" placeholder="كلمة المرور الرئيسية" autocomplete="off" dir="ltr">
+          <button class="toggle-master-visibility" onclick="toggleMasterVisibility()" type="button" aria-label="إظهار/إخفاء">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="masterEyeIcon">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+        <div id="masterError" class="master-error"></div>
+      </div>
+      <button id="masterActionBtn" class="btn-primary master-btn" onclick="handleMasterAction()">فتح</button>
+      <div id="masterLoading" class="master-loading" style="display:none;">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="app" style="display:none;">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="header-left">
+          <div class="app-logo">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0b57d0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0110 0v4"></path>
+            </svg>
+          </div>
+          <h1 class="app-title">مدير كلمات المرور</h1>
+        </div>
+        <div class="header-right">
+          <button class="icon-btn" id="installBtn" onclick="installApp()" title="تثبيت التطبيق" style="display:none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </button>
+          <button class="icon-btn" onclick="toggleTheme()" title="الوضع الداكن/الفاتح">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="themeIcon">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+            </svg>
+          </button>
+          <button class="icon-btn" onclick="showSettings()" title="الإعدادات">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.32 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!-- Search Bar -->
+      <div class="search-container">
+        <div class="search-wrapper">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="M21 21l-4.35-4.35"></path>
+          </svg>
+          <input type="text" id="searchInput" class="search-input" placeholder="بحث عن حساب..." oninput="filterAccounts()">
+        </div>
+      </div>
+    </header>
+
+    <!-- Category Tabs -->
+    <div class="categories-container">
+      <div class="categories-scroll" id="categoriesContainer">
+        <button class="category-chip active" data-category="all" onclick="selectCategory('all', this)">الكل</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="accounts-toolbar">
+        <span class="accounts-count" id="accountsCount">0 حساب</span>
+        <div class="sort-controls">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 5h10M11 9h7M11 13h4M11 17h2M3 7l4 4M3 17l4-4"></path>
+          </svg>
+          <select id="sortSelect" class="sort-select" onchange="filterAccounts()">
+            <option value="alpha-asc">أبجدي (أ-ي)</option>
+            <option value="alpha-desc">أبجدي (ي-أ)</option>
+            <option value="date-desc">الأحدث أولاً</option>
+            <option value="date-asc">الأقدم أولاً</option>
+          </select>
+        </div>
+      </div>
+      <div class="accounts-grid" id="accountsGrid">
+        <div class="empty-state" id="emptyState">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#9aa0a6" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0110 0v4"></path>
+          </svg>
+          <h3>لا توجد حسابات بعد</h3>
+          <p>أضف حسابك الأول لحفظ بيانات تسجيل الدخول</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- FAB -->
+    <button class="fab" onclick="showAddModal()" title="إضافة حساب جديد">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div id="accountModal" class="modal-overlay" style="display:none;" onclick="closeModalOnOverlay(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">إضافة حساب جديد</h2>
+        <button class="icon-btn" onclick="closeModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">التصنيف</label>
+          <div class="category-select" id="categorySelect">
+            <button class="category-option selected" data-category="جوجل" onclick="selectCategoryOption(this)">
+              <span class="cat-icon g">G</span> جوجل
+            </button>
+            <button class="category-option" data-category="فيسبوك" onclick="selectCategoryOption(this)">
+              <span class="cat-icon f">f</span> فيسبوك
+            </button>
+            <button class="category-option" data-category="تويتر" onclick="selectCategoryOption(this)">
+              <span class="cat-icon t">𝕏</span> تويتر
+            </button>
+            <button class="category-option" data-category="ديسكورد" onclick="selectCategoryOption(this)">
+              <span class="cat-icon d">▶</span> ديسكورد
+            </button>
+            <button class="category-option" data-category="جيت هب" onclick="selectCategoryOption(this)">
+              <span class="cat-icon gh">⌘</span> جيت هب
+            </button>
+            <button class="category-option" data-category="لينكد إن" onclick="selectCategoryOption(this)">
+              <span class="cat-icon li">in</span> لينكد إن
+            </button>
+            <button class="category-option" data-category="أخرى" onclick="selectCategoryOption(this)">
+              <span class="cat-icon o">●</span> أخرى
+            </button>
+          </div>
+          <input type="hidden" id="accountCategory" value="جوجل">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="accountEmail">البريد الإلكتروني</label>
+          <input type="email" id="accountEmail" class="form-input" placeholder="example@gmail.com" dir="ltr">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="accountUsername">اسم المستخدم</label>
+          <input type="text" id="accountUsername" class="form-input" placeholder="اسم المستخدم" dir="ltr">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="accountPassword">كلمة المرور</label>
+          <div class="password-field">
+            <input type="password" id="accountPassword" class="form-input" placeholder="كلمة المرور" dir="ltr">
+            <button class="field-btn" onclick="toggleFieldVisibility('accountPassword')" type="button" title="إظهار/إخفاء">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+            <button class="field-btn" onclick="generatePassword()" type="button" title="توليد كلمة مرور">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0110 0v4"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="accountNotes">ملاحظات</label>
+          <textarea id="accountNotes" class="form-input form-textarea" placeholder="ملاحظات إضافية (اختياري)" rows="2"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal()">إلغاء</button>
+        <button class="btn-primary" id="saveAccountBtn" onclick="saveAccount()">حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Detail Modal -->
+  <div id="viewModal" class="modal-overlay" style="display:none;" onclick="closeViewModalOnOverlay(event)">
+    <div class="modal modal-view">
+      <div class="modal-header">
+        <div class="view-header-info">
+          <div class="view-icon" id="viewIcon">G</div>
+          <div>
+            <h2 id="viewModalTitle">العنوان</h2>
+            <span class="view-category" id="viewCategory">جوجل</span>
+          </div>
+        </div>
+        <button class="icon-btn" onclick="closeViewModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body" id="viewModalBody"></div>
+      <div class="modal-footer view-footer">
+        <button class="btn-secondary" onclick="editAccountFromView()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          تعديل
+        </button>
+        <button class="btn-primary confirm-danger" onclick="deleteAccountFromView()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
+          حذف
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal-overlay" style="display:none;" onclick="closeModalOnOverlay(event)">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2>الإعدادات</h2>
+        <button class="icon-btn" onclick="closeSettings()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-section">
+          <h3 class="settings-title">المظهر</h3>
+          <div class="settings-row">
+            <span>الوضع الداكن</span>
+            <label class="toggle">
+              <input type="checkbox" id="darkModeToggle" onchange="toggleTheme()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3 class="settings-title">النسخ الاحتياطي</h3>
+          <button class="btn-secondary settings-btn" onclick="exportBackup()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            تصدير النسخة الاحتياطية
+          </button>
+          <button class="btn-secondary settings-btn" onclick="document.getElementById('importFile').click()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            استيراد النسخة الاحتياطية
+          </button>
+          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
+        </div>
+        <div class="settings-section">
+          <h3 class="settings-title">الأمان</h3>
+          <button class="btn-secondary settings-btn danger" onclick="lockApp()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0110 0v4"></path>
+            </svg>
+            قفل التطبيق
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div id="confirmModal" class="modal-overlay" style="display:none;" onclick="closeConfirmModalOnOverlay(event)">
+    <div class="modal modal-confirm">
+      <div class="confirm-icon" id="confirmIcon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d93025" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h3 class="confirm-title" id="confirmTitle">هل أنت متأكد؟</h3>
+      <p class="confirm-message" id="confirmMessage">هل تريد المتابعة؟</p>
+      <div class="modal-footer confirm-footer">
+        <button class="btn-secondary" id="confirmCancelBtn" onclick="closeConfirmModal()">إلغاء</button>
+        <button class="btn-primary confirm-danger" id="confirmOkBtn" onclick="confirmAction()">تأكيد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Password Generator Popup -->
+  <div id="passwordGenerator" class="pwd-gen-overlay" style="display:none;" onclick="if(event.target===this)hidePasswordGenerator()">
+    <div class="pwd-gen-modal">
+      <div class="pwd-gen-header">
+        <h3>توليد كلمة مرور</h3>
+        <button class="icon-btn" onclick="hidePasswordGenerator()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="pwd-gen-body">
+        <div class="pwd-gen-display">
+          <span id="generatedPassword">P@ssw0rd!23</span>
+          <button class="icon-btn" onclick="copyGeneratedPassword()" title="نسخ">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="pwd-gen-options">
+          <label class="pwd-option">
+            <span>طول كلمة المرور: <strong id="pwdLengthLabel">16</strong></span>
+            <input type="range" id="pwdLength" min="6" max="50" value="16" oninput="updateGeneratedPassword()">
+          </label>
+          <label class="pwd-option checkbox-option">
+            <input type="checkbox" id="pwdUpper" checked onchange="updateGeneratedPassword()">
+            <span>أحرف كبيرة (A-Z)</span>
+          </label>
+          <label class="pwd-option checkbox-option">
+            <input type="checkbox" id="pwdLower" checked onchange="updateGeneratedPassword()">
+            <span>أحرف صغيرة (a-z)</span>
+          </label>
+          <label class="pwd-option checkbox-option">
+            <input type="checkbox" id="pwdNumbers" checked onchange="updateGeneratedPassword()">
+            <span>أرقام (0-9)</span>
+          </label>
+          <label class="pwd-option checkbox-option">
+            <input type="checkbox" id="pwdSymbols" onchange="updateGeneratedPassword()">
+            <span>رموز (!@#$%)</span>
+          </label>
+        </div>
+        <button class="btn-primary" onclick="useGeneratedPassword()">استخدام كلمة المرور</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>

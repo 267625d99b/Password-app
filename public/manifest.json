@@ -1,0 +1,26 @@
+{
+  "name": "مدير كلمات المرور",
+  "short_name": "Password Manager",
+  "description": "تطبيق آمن لحفظ وإدارة كلمات المرور",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f4f8",
+  "theme_color": "#0b57d0",
+  "orientation": "portrait",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "icons/ChatGPT Image 23 يونيو 2026، 03_58_53 ص (1).png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/ChatGPT Image 23 يونيو 2026، 03_58_53 ص (1).png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

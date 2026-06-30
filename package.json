@@ -1,0 +1,13 @@
+{
+  "name": "password-manager",
+  "version": "1.0.0",
+  "description": "Password Manager - Google Style Design",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "set PORT=3001 && node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
