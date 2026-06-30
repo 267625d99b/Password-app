@@ -12,15 +12,16 @@
       "dest": "server.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/public/(.*)",
       "dest": "public/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "server.js"
+      "src": "/(.*\\..*)",
+      "dest": "public/$1"
+    },
+    {
+      "src": "/.*",
+      "dest": "public/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
