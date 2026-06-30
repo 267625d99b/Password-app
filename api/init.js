@@ -38,8 +38,25 @@ function writeConfig(config) {
   }
 }
 
-module.exports = (req, res) => {
-  // تفعيل CORS
+// Parse JSON body
+async function parseBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(body || '{}'));
+      } catch (e) {
+        reject(e);
+      }
+    });
+  });
+}
+
+module.exports = async (req, res) => {
+  // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -58,35 +75,41 @@ module.exports = (req, res) => {
   }
 
   try {
-    // Debug: log request body
-    console.log('Request body:', req.body);
-    console.log('Body type:', typeof req.body);
+    let body = req.body;
     
-    const { masterPassword } = req.body;
+    // If body is a string, parse it
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
+    // If body is undefined, try to parse from stream
+    if (!body) {
+      body = await parseBody(req);
+    }
 
-    console.log('Master Password received:', !!masterPassword, 'Length:', masterPassword?.length);
+    const { masterPassword } = body;
 
     if (!masterPassword || masterPassword.length < 4) {
       return res.status(400).json({ error: 'كلمة المرور يجب أن تكون 4 أحرف على الأقل' });
     }
 
-    // التحقق من عدم التهيئة مسبقاً
+    // Check if already initialized
     if (readConfig() !== null) {
       return res.status(400).json({ error: 'تمت التهيئة مسبقًا' });
     }
 
-    // إنشاء الملح والهاش
+    // Create salt and hash
     const salt = crypto.randomBytes(32).toString('hex');
     const hash = crypto.createHash('sha256').update(masterPassword + salt).digest('hex');
 
-    // حفظ الإعدادات
+    // Save config
     writeConfig({
       salt,
       hash,
       createdAt: new Date().toISOString()
     });
 
-    // إنشاء token
+    // Create token
     const token = crypto.randomBytes(32).toString('hex');
 
     res.status(200).json({

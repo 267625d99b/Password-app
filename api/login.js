@@ -17,8 +17,25 @@ function readConfig() {
   }
 }
 
-module.exports = (req, res) => {
-  // تفعيل CORS
+// Parse JSON body
+async function parseBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(body || '{}'));
+      } catch (e) {
+        reject(e);
+      }
+    });
+  });
+}
+
+module.exports = async (req, res) => {
+  // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -37,21 +54,33 @@ module.exports = (req, res) => {
   }
 
   try {
-    const { masterPassword } = req.body;
+    let body = req.body;
+    
+    // If body is a string, parse it
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
+    // If body is undefined, try to parse from stream
+    if (!body) {
+      body = await parseBody(req);
+    }
+
+    const { masterPassword } = body;
 
     const config = readConfig();
     if (!config) {
       return res.status(400).json({ error: 'لم يتم تهيئة التطبيق بعد' });
     }
 
-    // التحقق من كلمة المرور
+    // Verify password
     const hash = crypto.createHash('sha256').update(masterPassword + config.salt).digest('hex');
 
     if (hash !== config.hash) {
       return res.status(401).json({ error: 'كلمة المرور غير صحيحة' });
     }
 
-    // إنشاء token
+    // Create token
     const token = crypto.randomBytes(32).toString('hex');
 
     res.status(200).json({

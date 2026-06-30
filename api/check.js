@@ -17,7 +17,7 @@ function readConfig() {
 }
 
 module.exports = (req, res) => {
-  // تفعيل CORS
+  // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
