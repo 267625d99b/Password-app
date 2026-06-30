@@ -196,10 +196,16 @@ function getLocalIP() {
   return 'localhost';
 }
 
-app.listen(PORT, HOST, () => {
-  const ip = getLocalIP();
-  console.log(`✅ Password Manager`);
-  console.log(`   محلي:     http://localhost:${PORT}`);
-  console.log(`   شبكة:     http://${ip}:${PORT}`);
-  console.log(`   افتح الرابط من جوالك على نفس الشبكة`);
-});
+// للتطوير المحلي
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, HOST, () => {
+    const ip = getLocalIP();
+    console.log(`✅ Password Manager`);
+    console.log(`   محلي:     http://localhost:${PORT}`);
+    console.log(`   شبكة:     http://${ip}:${PORT}`);
+    console.log(`   افتح الرابط من جوالك على نفس الشبكة`);
+  });
+}
+
+// للـ Vercel
+module.exports = app;
