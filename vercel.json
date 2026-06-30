@@ -1,15 +1,28 @@
 {
   "version": 2,
+  "public": "public",
+  "buildCommand": "npm run build || true",
   "builds": [
     {
-      "src": "server.js",
+      "src": "public/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "api/**/*.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/.*",
-      "dest": "server.js"
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(?!api).*",
+      "dest": "/index.html"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }

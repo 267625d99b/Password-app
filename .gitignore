@@ -1,16 +1,50 @@
+# Dependencies
 node_modules/
+package-lock.json
+yarn.lock
+
+# Environment variables
 .env
 .env.local
 .env.*.local
+.env.production.local
+
+# Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Build and distribution
 dist/
 build/
+.next/
+out/
+
+# Vercel
 .vercel
+.vercel/
+
+# Local data (development only)
 data/vault.enc
 data/config.json
+
+# IDE
 .idea/
 .vscode/settings.json
+*.swp
+*.swo
+*~
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+.cache/

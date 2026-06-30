@@ -5,9 +5,13 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "set PORT=3001 && node server.js"
+    "dev": "set PORT=3001 && node server.js",
+    "build": "npm install --production"
   },
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
