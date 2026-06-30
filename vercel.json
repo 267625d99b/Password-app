@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "public": "public",
   "buildCommand": "npm run build || true",
   "builds": [
     {
@@ -21,8 +20,5 @@
       "src": "/(?!api).*",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
